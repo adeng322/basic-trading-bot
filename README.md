@@ -48,4 +48,4 @@ There are things I could not do but definitely want to do if I have more time:
 
 I would love to discuss them with you. I have enjoyed the assignment. I tried to stick with
 K.I.S.S(keep it simple and stupid) and D.R.Y(do not repeat yourself) principles in both of my design and code, mainly because it is a
-basic trading bot. Many thanks to you for reading this.
+basic trading bot. Many thanks to you for reading this!

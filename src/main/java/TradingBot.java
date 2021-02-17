@@ -11,6 +11,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * This is the class where the bot does its job.
+ */
 public class TradingBot {
 
     private TradeService tradeService;
@@ -37,9 +40,7 @@ public class TradingBot {
         CountDownLatch stopProgramLatch = new CountDownLatch(1);
 
         tradeService.setOnFinishedListener(stopProgramLatch::countDown);
-
         buxWebsocketClient.setOnConnectedListener(() -> buxWebsocketClient.sendMessage("subscribeTo", productId));
-
         buxWebsocketClient.setMessageListener(message -> {
             try {
                 JSONObject jsonMessage = new JSONObject(message);
@@ -59,14 +60,13 @@ public class TradingBot {
     }
 
     public static void main(String[] args) {
-        final String productId = "sb26493";
-        final double buyPrice = 13945;
+        final String productId = ConfigProperties.getProperty("product.id");
+        final double buyPrice = Double.parseDouble(ConfigProperties.getProperty("buy.price"));
         final double upperLimit = buyPrice + 5;
         final double lowerLimit = buyPrice - 5;
 
         BuxWebsocketClient buxWebsocketClient = new BuxWebsocketClient();
         TradeService tradeService = new TradeService(productId, buyPrice, lowerLimit, upperLimit);
-
         TradingBot tradingBot = new TradingBot(tradeService, buxWebsocketClient);
         try {
             tradingBot.run(productId);

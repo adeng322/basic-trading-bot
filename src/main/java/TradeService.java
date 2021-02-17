@@ -7,6 +7,9 @@ import java.util.Objects;
 
 import eventlistener.OnFinishedListener;
 
+/**
+ * This is the class where buy and sell http request being called.
+ */
 public class TradeService {
 
     private static final MediaType JSON

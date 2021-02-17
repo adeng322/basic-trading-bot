@@ -9,6 +9,9 @@ import javax.websocket.*;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * This is the class where websocket communication is handled.
+ */
 @ClientEndpoint(configurator = ClientSocketConfig.class)
 public class BuxWebsocketClient {
 

@@ -1,21 +1,16 @@
 package websocketclient;
 
-import appconfig.Property;
 import eventlistener.OnConnectedListener;
 import eventlistener.MessageListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import javax.websocket.*;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-@ClientEndpoint(configurator = BUXWebsocketClient.ClientSocketConfig.class)
-public class BUXWebsocketClient {
+@ClientEndpoint(configurator = ClientSocketConfig.class)
+public class BuxWebsocketClient {
 
     private CountDownLatch latch = new CountDownLatch(1);
     private Session session;
@@ -30,7 +25,7 @@ public class BUXWebsocketClient {
     }
 
     @OnMessage
-    public void onText(String message, Session session) throws JSONException {
+    public void onText(String message) throws JSONException {
         JSONObject jsonMessage = new JSONObject(message);
         if (!isConnected) {
             if (jsonMessage.get("t").equals("connect.connected")) {
@@ -42,7 +37,7 @@ public class BUXWebsocketClient {
             }
         } else if (jsonMessage.get("t").equals("trading.quote")) {
             JSONObject jsonMessageBody = new JSONObject(jsonMessage.get("body").toString());
-            System.out.println("Current price:" + Double.parseDouble(jsonMessageBody.get("currentPrice").toString()));
+            System.out.println("Current price: " + Double.parseDouble(jsonMessageBody.get("currentPrice").toString()));
             messageListener.handleMessage(message);
         }
     }
@@ -84,12 +79,15 @@ public class BUXWebsocketClient {
         this.onConnectedListener = onConnectedListener;
     }
 
-    public static class ClientSocketConfig extends ClientEndpointConfig.Configurator {
-        @Override
-        public void beforeRequest(Map<String, List<String>> headers) {
-            headers.put("Authorization", Arrays.asList(Property.getProperty("authorization")));
-            headers.put("Accept-Language", Arrays.asList(Property.getProperty("accept-language")));
-            super.beforeRequest(headers);
-        }
+    public void setConnected(boolean connected) {
+        isConnected = connected;
+    }
+
+    public boolean getConnected() {
+        return isConnected;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 }

@@ -1,9 +1,10 @@
-import appconfig.Property;
+import config.ConfigProperties;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
+import java.util.Objects;
+
 import eventlistener.OnFinishedListener;
 
 public class TradeService {
@@ -16,7 +17,7 @@ public class TradeService {
     private final double lowSellPrice;
     private final double highSellPrice;
     private String positionId;
-    public OnFinishedListener onFinishedListener;
+    private OnFinishedListener onFinishedListener;
     private boolean isBought = false;
 
     public TradeService(String productId, double buyPrice, double lowSellPrice, double highSellPrice) {
@@ -34,7 +35,7 @@ public class TradeService {
             } else if (currentPrice <= buyPrice) {
                 try {
                     System.out.println("Bought at: " + currentPrice);
-                    doPostRequest(productId);
+                    doPostRequest();
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
@@ -43,7 +44,7 @@ public class TradeService {
             if (currentPrice <= lowSellPrice || currentPrice >= highSellPrice) {
                 try {
                     System.out.println("Sold at: " + currentPrice);
-                    System.out.println(doDeleteRequest().body().string());
+                    doDeleteRequest();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -54,14 +55,14 @@ public class TradeService {
 
     private static Headers createHeaders() {
         Headers.Builder builder = new Headers.Builder();
-        builder.add("Authorization", Property.getProperty("authorization"))
-                .add("Accept-Language", Property.getProperty("accept-language"))
-                .add("Content-Type", Property.getProperty("content-type"))
-                .add("Accept", Property.getProperty("accept"));
+        builder.add("Authorization", ConfigProperties.getProperty("authorization"))
+                .add("Accept-Language", ConfigProperties.getProperty("accept-language"))
+                .add("Content-Type", ConfigProperties.getProperty("content-type"))
+                .add("Accept", ConfigProperties.getProperty("accept"));
         return builder.build();
     }
 
-    public Response doPostRequest(String productId) throws IOException, JSONException {
+    public Response doPostRequest() throws IOException, JSONException {
         JSONObject investingAmount = new JSONObject();
         investingAmount.put("currency", "BUX")
                 .put("decimals", 2)
@@ -69,7 +70,7 @@ public class TradeService {
         JSONObject source = new JSONObject();
         source.put("sourceType", "OTHER");
         JSONObject openPositionJson = new JSONObject();
-        openPositionJson.put("productId", productId)
+        openPositionJson.put("productId", this.productId)
                 .put("investingAmount", investingAmount)
                 .put("leverage", 2)
                 .put("direction", "BUY")
@@ -78,12 +79,12 @@ public class TradeService {
         RequestBody body = RequestBody.create(openPositionJson.toString(), JSON);
         Request request = new Request.Builder()
                 .headers(createHeaders())
-                .url(Property.getProperty("buy.order.url"))
+                .url(ConfigProperties.getProperty("buy.order.url"))
                 .post(body)
                 .build();
 
         Response response = client.newCall(request).execute();
-        String responseBodyString = response.body().string();
+        String responseBodyString = Objects.requireNonNull(response.body()).string();
         if (response.isSuccessful()) {
             System.out.println(responseBodyString);
             JSONObject responseBody = new JSONObject(responseBodyString);
@@ -96,18 +97,27 @@ public class TradeService {
     public Response doDeleteRequest() throws IOException {
         Request request = new Request.Builder()
                 .headers(createHeaders())
-                .url(Property.getProperty("sell.order.url")+ positionId)
+                .url(ConfigProperties.getProperty("sell.order.url")+ positionId)
                 .delete()
                 .build();
 
         Response response = client.newCall(request).execute();
         if (response.isSuccessful()) {
+            System.out.println(Objects.requireNonNull(response.body()).string());
             onFinishedListener.onFinished();
         }
         return response;
     }
 
-    public void setOnCompleteListener(OnFinishedListener onFinishedListener) {
+    public void setOnFinishedListener(OnFinishedListener onFinishedListener) {
         this.onFinishedListener = onFinishedListener;
+    }
+
+    public void setIsBought(boolean isBought) {
+        this.isBought = isBought;
+    }
+
+    public boolean getIsBought() {
+        return isBought;
     }
 }

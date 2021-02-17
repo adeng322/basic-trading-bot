@@ -1,7 +1,7 @@
-import appconfig.Property;
+import config.ConfigProperties;
 import org.json.JSONException;
 import org.json.JSONObject;
-import websocketclient.BUXWebsocketClient;
+import websocketclient.BuxWebsocketClient;
 
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
@@ -14,18 +14,19 @@ import java.util.concurrent.CountDownLatch;
 public class TradingBot {
 
     private TradeService tradeService;
-    private BUXWebsocketClient buxWebsocketClient;
+    private BuxWebsocketClient buxWebsocketClient;
 
-    public TradingBot(TradeService tradeService, BUXWebsocketClient buxWebsocketClient) {
+    public TradingBot(TradeService tradeService, BuxWebsocketClient buxWebsocketClient) {
         this.tradeService = tradeService;
         this.buxWebsocketClient = buxWebsocketClient;
     }
 
-    public void connectToWebsocket(BUXWebsocketClient BUXWebsocketClient) {
+    public void connectToWebsocket(BuxWebsocketClient BUXWebsocketClient) {
         WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
         try {
-            webSocketContainer.connectToServer(BUXWebsocketClient, new URI(Property.getProperty("websocket.url")));
-            //wait till websocket connection is open
+            webSocketContainer.connectToServer(BUXWebsocketClient, new URI(ConfigProperties.getProperty("websocket.url")));
+
+            /* wait till websocket connection is open */
             BUXWebsocketClient.getLatch().await();
         } catch (DeploymentException | IOException | URISyntaxException | InterruptedException e) {
             e.printStackTrace();
@@ -35,7 +36,7 @@ public class TradingBot {
     public void run(String productId) throws InterruptedException, IOException {
         CountDownLatch stopProgramLatch = new CountDownLatch(1);
 
-        tradeService.setOnCompleteListener(() -> stopProgramLatch.countDown());
+        tradeService.setOnFinishedListener(stopProgramLatch::countDown);
 
         buxWebsocketClient.setOnConnectedListener(() -> buxWebsocketClient.sendMessage("subscribeTo", productId));
 
@@ -59,11 +60,11 @@ public class TradingBot {
 
     public static void main(String[] args) {
         final String productId = "sb26493";
-        final double buyPrice = 12150;
-        final double upperLimit = buyPrice + 50;
-        final double lowerLimit = buyPrice - 50;
+        final double buyPrice = 13945;
+        final double upperLimit = buyPrice + 5;
+        final double lowerLimit = buyPrice - 5;
 
-        BUXWebsocketClient buxWebsocketClient = new BUXWebsocketClient();
+        BuxWebsocketClient buxWebsocketClient = new BuxWebsocketClient();
         TradeService tradeService = new TradeService(productId, buyPrice, lowerLimit, upperLimit);
 
         TradingBot tradingBot = new TradingBot(tradeService, buxWebsocketClient);

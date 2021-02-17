@@ -1,10 +1,10 @@
-package appconfig;
+package config;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-public class Property {
+public class ConfigProperties {
 
     public static String getProperty(String propertyName) {
         Properties properties = new Properties();

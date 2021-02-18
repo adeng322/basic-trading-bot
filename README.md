@@ -4,7 +4,10 @@
 
 ## Run
 You can run this maven project on any IDE
-or command line
+or from command line
+
+    mvn clean install
+    mvn exec:java "-Dexec.mainClass=TradingBot"
 
 ## Input/Output
 The bot needs 4 inputs: productId, buyPrice, lowerLimit and higherLimit. These four inputs are defined in *resources/application.properties* file.

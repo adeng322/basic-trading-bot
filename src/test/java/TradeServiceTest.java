@@ -31,7 +31,7 @@ public class TradeServiceTest {
         tradeService.trade(13500);
         byteArrayOutputStream.flush();
         verify(onFinishedListener, times(1)).onFinished();
-        assertTrue(byteArrayOutputStream.toString().contains("The current price is lower than the lowSellPrice. The bot terminates."));
+        assertTrue(byteArrayOutputStream.toString().contains("The current price is lower than the lower-limit price. The bot terminates."));
     }
 
     @Test

@@ -55,6 +55,7 @@ to make a real http request.
 Due to time limit, this bot is more a prototype which focuses mainly on **"it is working!"**. There are things I could not do but definitely want to do if I have more time:
 * Logging
 * Error handling
+* Documentation
 * ...
 
 I would love to discuss them with you. I have enjoyed the assignment a lot. I tried to stick with

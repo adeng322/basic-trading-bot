@@ -37,7 +37,7 @@ the bot will printout a message and terminate the connection.
     
     Connected to server
     Current price: 13920.0
-    The current price is lower than the lowSellPrice. The bot terminates.
+    The current price is lower than the lower-limit price. The bot terminates.
     Closing a WebSocket due to Disconnected
 
 Due to time limit, I have not handled any invalid inputs, so please make sure inputs are valid.

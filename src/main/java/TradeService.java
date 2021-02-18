@@ -33,7 +33,7 @@ public class TradeService {
     public void trade(double currentPrice) {
         if (!isBought) {
             if (currentPrice <= lowerLimit) {
-                System.out.println("The current price is lower than the lowSellPrice. The bot terminates.");
+                System.out.println("The current price is lower than the lower-limit price. The bot terminates.");
                 this.onFinishedListener.onFinished();
             } else if (currentPrice <= buyPrice) {
                 try {

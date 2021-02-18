@@ -10,7 +10,7 @@ or from command line
     mvn exec:java "-Dexec.mainClass=TradingBot"
 
 ## Input/Output
-The bot needs 4 inputs: productId, buyPrice, lowerLimit and higherLimit. These four inputs are defined in *resources/application.properties* file.
+The bot needs 4 inputs: `productId`, `buyPrice`, `lowerLimit` and `higherLimit`. These four inputs are defined in *resources/application.properties* file.
 In order for you to visualize what have happened, I print out everything
 on the console, including response to show a successful buy and sell order.
 For example: with inputs
@@ -35,8 +35,8 @@ The program would give following output:
     {"id":"ccd3e117-5d86-4f97-be29-bf000d3f9263","positionId":"aea505b3-...
     Closing a WebSocket due to Disconnected
 
-Worth to notice: when the bot starts, if the current price is lower than the lower limit price,
-the bot will printout a message and terminate the connection.
+Worth to notice: when the bot starts, if the current price is lower than the lower-limit price,
+the bot will print out a message and terminate the websocket connection.
     
     Connected to server
     Current price: 13920.0
@@ -46,15 +46,18 @@ the bot will printout a message and terminate the connection.
 Due to time limit, I have not handled any invalid inputs, so please make sure inputs are valid.
 
 ## Test
-I have unit tested most of the logic functionalities that is not related to external library.
-For example, in the **tradeService** class, there is a method called *doPostRequest()* which just simply call a httprequest
-to make the buy order. I would not test it because I assume it would work. Also, I do not want to make a real request in unit resting.
+I have unit tested most of the logic functionalities that is not related to external libraries.
+For example, in the *tradeService* class, there is a method called `doPostRequest()` which just simply makes a http request
+to make the buy order. I would not test this method simply because I assume it would work. It is against the principle of unit testing
+to make a real http request.
 
 ## Workarounds
-There are things I could not do but definitely want to do if I have more time:
-1. Logging
-2. Error handling
+Due to time limit, this bot is more a prototype which focuses mainly on **"it is working!"**. There are things I could not do but definitely want to do if I have more time:
+* Logging
+* Error handling
+* ...
 
-I would love to discuss them with you. I have enjoyed the assignment. I tried to stick with
-K.I.S.S(keep it simple and stupid) and D.R.Y(do not repeat yourself) principles in both of my design and code, mainly because it is a
-basic trading bot. Many thanks to you for reading this!
+I would love to discuss them with you. I have enjoyed the assignment a lot. I tried to stick with
+**K.I.S.S(keep it simple and stupid)** and **D.R.Y(do not repeat yourself)** principles in both of my design and code.
+
+*Many thanks to you for reading this!*

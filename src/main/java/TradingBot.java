@@ -62,11 +62,11 @@ public class TradingBot {
     public static void main(String[] args) {
         final String productId = ConfigProperties.getProperty("product.id");
         final double buyPrice = Double.parseDouble(ConfigProperties.getProperty("buy.price"));
-        final double upperLimit = buyPrice + 5;
-        final double lowerLimit = buyPrice - 5;
+        final double higherLimit = Double.parseDouble(ConfigProperties.getProperty("higher.limit"));
+        final double lowerLimit = Double.parseDouble(ConfigProperties.getProperty("lower.limit"));
 
         BuxWebsocketClient buxWebsocketClient = new BuxWebsocketClient();
-        TradeService tradeService = new TradeService(productId, buyPrice, lowerLimit, upperLimit);
+        TradeService tradeService = new TradeService(productId, buyPrice, lowerLimit, higherLimit);
         TradingBot tradingBot = new TradingBot(tradeService, buxWebsocketClient);
         try {
             tradingBot.run(productId);

@@ -17,22 +17,22 @@ public class TradeService {
     private final OkHttpClient client = new OkHttpClient();
     private final String productId;
     private final double buyPrice;
-    private final double lowSellPrice;
-    private final double highSellPrice;
+    private final double lowerLimit;
+    private final double higherLimit;
     private String positionId;
     private OnFinishedListener onFinishedListener;
     private boolean isBought = false;
 
-    public TradeService(String productId, double buyPrice, double lowSellPrice, double highSellPrice) {
+    public TradeService(String productId, double buyPrice, double lowerLimit, double higherLimit) {
         this.productId = productId;
         this.buyPrice = buyPrice;
-        this.lowSellPrice = lowSellPrice;
-        this.highSellPrice = highSellPrice;
+        this.lowerLimit = lowerLimit;
+        this.higherLimit = higherLimit;
     }
 
     public void trade(double currentPrice) {
         if (!isBought) {
-            if (currentPrice <= lowSellPrice) {
+            if (currentPrice <= lowerLimit) {
                 System.out.println("The current price is lower than the lowSellPrice. The bot terminates.");
                 this.onFinishedListener.onFinished();
             } else if (currentPrice <= buyPrice) {
@@ -44,7 +44,7 @@ public class TradeService {
                 }
             }
         } else {
-            if (currentPrice <= lowSellPrice || currentPrice >= highSellPrice) {
+            if (currentPrice <= lowerLimit || currentPrice >= higherLimit) {
                 try {
                     System.out.println("Sold at: " + currentPrice);
                     doDeleteRequest();

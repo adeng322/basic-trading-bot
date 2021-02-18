@@ -12,7 +12,7 @@ In order for you to visualize what have happened, I print out everything
 on the console, including response to show a successful buy and sell order.
 For example: with inputs
 
-    productId="sb26493" buy.price=13945 upper.limit=13950 lower.limit=13940 
+    productId=sb26493 buy.price=13945 upper.limit=13950 lower.limit=13940 
 The program would give following output:
 
     Connected to server
